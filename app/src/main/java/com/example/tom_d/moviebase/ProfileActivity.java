@@ -111,15 +111,15 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
 
-        if (mAuth.getCurrentUser() == null){
+        if (user == null){
             finish();
             startActivity(new Intent(this, MainActivity.class));
         }
         // If user already has a display name, hide 'save username' button
-        if (user.getDisplayName() !=null){
-            Button itemSave = findViewById(R.id.buttonSaveUsername);
-            itemSave.setVisibility(View.GONE);
-        }
+//        if (user.getDisplayName() !=null){
+//            Button itemSave = findViewById(R.id.buttonSaveUsername);
+//            itemSave.setVisibility(View.GONE);
+//        }
     }
 
     private void loadUserInformation() {
@@ -145,15 +145,18 @@ public class ProfileActivity extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
 
         if(user !=null){
+            progressBar.setVisibility(View.VISIBLE);
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(displayName)
-//                    .setPhotoUri(Uri.parse(profileImageURL))
+                  // TODO: FIX THIS BECAUSE IT MAKES 'SAVE USER INFO' CRASH!!!
+                 //   .setPhotoUri(Uri.parse(profileImageURL))
                     .build();
 
             user.updateProfile(profile)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            progressBar.setVisibility(View.GONE);
                             if(task.isSuccessful()){
                                 Toast.makeText(ProfileActivity.this,"Profile is updated!",Toast.LENGTH_SHORT).show();
 
@@ -163,22 +166,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == CHOOSE_IMAGE && requestCode == RESULT_OK && data != null && data.getData() != null){
-            uriProfileImage = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
-                imageView.setImageBitmap(bitmap);
-
-                uploadImageToFirebaseStorage();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     // Not working properly yet
     private void uploadImageToFirebaseStorage() {
@@ -206,6 +194,37 @@ public class ProfileActivity extends AppCompatActivity {
             });
         }
         }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+//        if(requestCode == CHOOSE_IMAGE && requestCode == RESULT_OK && data != null && data.getData() != null){
+//            uriProfileImage = data.getData();
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
+//                imageView.setImageBitmap(bitmap);
+//
+//                uploadImageToFirebaseStorage();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        // Fixed thanks to: https://stackoverflow.com/questions/28155972/imageview-not-showing-image-selected-from-gallery
+
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && null != data && data.getData() !=null) {
+            Uri uriProfileImage = data.getData();
+            try {
+                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriProfileImage));
+                uploadImageToFirebaseStorage();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     // Not working properly yet
         private void showImageChooser(){
