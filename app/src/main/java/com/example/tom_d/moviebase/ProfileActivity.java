@@ -9,7 +9,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -33,6 +35,8 @@ public class ProfileActivity extends AppCompatActivity {
     private static final int CHOOSE_IMAGE = 1 ;
     ImageView imageView;
     EditText editText;
+    Button item;
+
 
     Uri uriProfileImage;
     ProgressBar progressBar;
@@ -77,30 +81,21 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+
+        findViewById(R.id.buttonContinue).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.buttonContinue:
+                        finish();
+                        startActivity(new Intent(ProfileActivity.this, MoviebaseActivity.class));
+                        break;
+                }
+            }
+            });
+        }
+
     
-
-    }
-
-
-
-//        findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
-
-//            public void Logout(View v) {
-//                FirebaseUser user = mAuth.getCurrentUser();
-//
-//                if(user !=  null){
-//                    FirebaseAuth.getInstance()
-//                            .signOut()
-//                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    // user is now signed out
-//                                    startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-//                                    finish();
-//                                }
-//                            });}
-//
-//
-//    }
 
     private void Logout() {
         FirebaseAuth.getInstance().signOut();
@@ -111,17 +106,19 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
     @Override
     protected void onStart() {
         super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
 
         if (mAuth.getCurrentUser() == null){
             finish();
             startActivity(new Intent(this, MainActivity.class));
+        }
+        // If user already has a display name, hide 'save username' button
+        if (user.getDisplayName() !=null){
+            Button itemSave = findViewById(R.id.buttonSaveUsername);
+            itemSave.setVisibility(View.GONE);
         }
     }
 
@@ -183,6 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Not working properly yet
     private void uploadImageToFirebaseStorage() {
         final StorageReference profileImageReference = FirebaseStorage.getInstance().getReference("profilepictures/"+System.currentTimeMillis()+".jpg");
 
@@ -209,10 +207,15 @@ public class ProfileActivity extends AppCompatActivity {
         }
         }
 
-    private void showImageChooser(){
+    // Not working properly yet
+        private void showImageChooser(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent. setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "select profile image"), CHOOSE_IMAGE);
     }
+
+
+
+
 }
