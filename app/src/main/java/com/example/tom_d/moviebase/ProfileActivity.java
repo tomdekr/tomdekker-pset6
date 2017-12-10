@@ -95,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
             });
         }
 
-    
+
 
     private void Logout() {
         FirebaseAuth.getInstance().signOut();
