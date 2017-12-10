@@ -7,34 +7,44 @@
     tools:context="com.example.tom_d.moviebase.ProfileActivity"
     android:background="#e43f3f">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="208dp"
-        android:text="Click the camera to upload your own picture!"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout3" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="243dp"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/imageView"
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="137dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
-    </LinearLayout>
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="137dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                app:srcCompat="@android:drawable/ic_menu_camera"
+                android:layout_centerHorizontal="true"/>
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="200dp"
+                android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="208dp"
+            android:text="Click the camera to upload your own picture!"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,8 +63,6 @@
             android:layout_marginStart="8dp"
             android:ems="10"
             android:hint="Enter username"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +78,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="8dp"
-            android:text="Save"
+            android:text="Save username"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="85dp"
+            android:backgroundTint="#cc1d1d"
+            />
+        <Button
+            android:id="@+id/buttonLogout"
+            android:layout_width="283dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:text="Logout"
+            android:onClick="Logout"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="85dp"

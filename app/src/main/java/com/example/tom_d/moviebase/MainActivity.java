@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         progressBar.setVisibility(View.GONE);
                         //Check if login is successfull
                         if(task.isSuccessful()) {
+                            finish();
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -82,13 +83,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 });
-                        }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuth.getCurrentUser() != null){
+            startActivity(new Intent(this, ProfileActivity.class));
+        }
+    }
 
     @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.textViewSignup:
+                finish();
                 startActivity(new Intent(this, SignupActivity.class));
                 break;
             case R.id.buttonLogin:
