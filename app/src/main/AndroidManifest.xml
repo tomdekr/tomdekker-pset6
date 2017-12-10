@@ -22,7 +22,8 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MoviebaseActivity" />
         <activity android:name=".MovieAdapter" />
-        <activity android:name=".MovieDatabase"></activity>
+        <activity android:name=".MovieDatabase" />
+        <activity android:name=".FavoriteActivity"></activity>
     </application>
 
 </manifest>

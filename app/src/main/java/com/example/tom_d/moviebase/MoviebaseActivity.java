@@ -1,11 +1,15 @@
 package com.example.tom_d.moviebase;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import com.android.volley.Request;
@@ -33,14 +37,34 @@ public class MoviebaseActivity extends AppCompatActivity {
         // Instantiate the RequestQueue.
         final RequestQueue queue = Volley.newRequestQueue(this);
 
+        findViewById(R.id.imageView4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.imageView4:
+                        finish();
+                        startActivity(new Intent(MoviebaseActivity.this, FavoriteActivity.class));
+                        break;
+                }
+            }
+        });
+
+
         findViewById(R.id.buttonGET).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //Thanks to: https://stackoverflow.com/questions/43095334/java-convert-string-to-use-in-url-as-part-of-a-get
                 EditText inputText = (EditText)findViewById(R.id.editTextInput);
                 final String input = inputText.getText().toString();
                 final String url = new String("http://www.omdbapi.com/?apikey=338560c0&s="+input);
 
+                // Checks if there is a input by user
+                if (input.isEmpty()){
+                    inputText.setError("Input is required!");
+                    inputText.requestFocus();
+                    return;
+                }
                 // Request a string response from the provided URL.
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.GET, url, null,
@@ -68,8 +92,6 @@ public class MoviebaseActivity extends AppCompatActivity {
                                     }
                                 }
 
-
-
                                 ArrayAdapter<String> adapter =
                                         new ArrayAdapter<String>(
                                                 getApplicationContext(),
@@ -77,18 +99,55 @@ public class MoviebaseActivity extends AppCompatActivity {
                                                 listdata
                                         );
                                 ListView mListView = findViewById(R.id.list);
-
                                 mListView.setAdapter(adapter);
+
+                                // Creates the availability to click on movies and 'add' to favorites
+                                try {
+                                    mListView.setOnItemClickListener(
+
+                                            new AdapterView.OnItemClickListener() {
+
+                                                SharedPreferences settings = MoviebaseActivity.this.getSharedPreferences("movie list", MODE_PRIVATE);
+                                                String item = settings.getString("movie list", "[]");
+
+                                                JSONArray movie_list = new JSONArray(item);
+
+
+                                                @Override
+                                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                                                    String categoryPicked = "You added " +
+                                                            String.valueOf(adapterView.getItemAtPosition(position)) + " to your order";
+                                                    Toast.makeText(MoviebaseActivity.this, categoryPicked, Toast.LENGTH_SHORT).show();
+
+                                                    SharedPreferences settings = MoviebaseActivity.this.getSharedPreferences("order", MODE_PRIVATE);
+                                                    SharedPreferences.Editor editor = settings.edit();
+
+                                                    movie_list.put(String.valueOf(adapterView.getItemAtPosition(position)));
+                                                    editor.putString("movie list", String.valueOf(movie_list));
+                                                    editor.commit();
+
+                                                }
+
+                                            });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+
+
 
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-        //                mTextView.setText("That didn't work!");
                     }
                 });
         // Add the request to the RequestQueue.
                 queue.add(jsonObjectRequest);
             }
 
-        });}}
+        });}
+
+
+}
+
