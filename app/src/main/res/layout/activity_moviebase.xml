@@ -8,22 +8,7 @@
     tools:context="com.example.tom_d.moviebase.MainActivity">
 
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="48dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="280dp"
-        android:layout_marginTop="168dp"
-        android:tint="@color/colorFill"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.104"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -81,7 +66,7 @@
 
         <Button
             android:id="@+id/buttonGET"
-            android:layout_width="229dp"
+            android:layout_width="279dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginBottom="8dp"
@@ -114,5 +99,6 @@
 
             />
     </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

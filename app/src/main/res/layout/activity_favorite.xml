@@ -9,20 +9,38 @@
 
 
     <TextView
-        android:id="@+id/mTextView"
+        android:id="@+id/mTextView2"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="112dp"
         android:backgroundTint="#cccccc"
-        android:textSize="25dp"
-        android:textAlignment="center"
         android:ems="10"
         android:inputType="text"
         android:text="Your favorite movies:"
+        android:textAlignment="center"
         android:textColor="#FFFFFF"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
+    <ListView
+        android:id="@+id/listViewMovies2"
+        android:layout_width="280dp"
+        android:layout_height="317dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="172dp"
+        android:backgroundTint="#cccccc"
+        android:ems="10"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
@@ -49,27 +67,6 @@
             android:layout_marginTop="20dp"
             app:srcCompat="@drawable/moviebasesmall" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="357dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="208dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="25dp"
-
-            />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

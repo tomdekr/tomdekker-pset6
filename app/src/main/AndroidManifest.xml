@@ -23,7 +23,10 @@
         <activity android:name=".MoviebaseActivity" />
         <activity android:name=".MovieAdapter" />
         <activity android:name=".MovieDatabase" />
-        <activity android:name=".FavoriteActivity"></activity>
+        <activity android:name=".FavoriteActivity" />
+        <activity android:name=".BlankFragment" />
+        <activity android:name=".InfoFragment" />
+        <activity android:name=".InfoActivity"></activity>
     </application>
 
 </manifest>

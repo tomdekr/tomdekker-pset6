@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -93,7 +95,24 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
             });
+                findViewById(R.id.buttonFavorites).setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+
+                        switch (view.getId()) {
+                            case R.id.buttonFavorites:
+                                finish();
+                                startActivity(new Intent(ProfileActivity.this, FavoriteActivity.class));
+                                break;
+                        }
+                    }
+                }
+
+            );
         }
+
+
 
 
 
