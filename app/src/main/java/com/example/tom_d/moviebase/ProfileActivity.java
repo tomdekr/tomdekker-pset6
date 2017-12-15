@@ -1,49 +1,26 @@
 package com.example.tom_d.moviebase;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
+
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final int CHOOSE_IMAGE = 1 ;
-    ImageView imageView;
     EditText editText;
-    Button item;
-
-
-    Uri uriProfileImage;
     ProgressBar progressBar;
-
-    String profileImageURL;
     FirebaseAuth mAuth;
 
     @Override
@@ -51,24 +28,16 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Necessary stuff for funcionality
         editText = findViewById(R.id.editTextUsername);
-//        imageView = findViewById(R.id.imageView);
-
         progressBar = findViewById(R.id.progressbar);
-
         mAuth = FirebaseAuth.getInstance();
 
         //This wil load all filled in (working atm) information
         loadUserInformation();
 
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showImageChooser();
-//            }
-//        });
-
         findViewById(R.id.buttonSaveUsername).setOnClickListener(new View.OnClickListener() {
+            // Executes the profile update method called saveUserInformation
             @Override
             public void onClick(View view) {
                 saveUserInformation();
@@ -77,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
+            // Executes the Logout method
             @Override
             public void onClick(View view) {
                 Logout();
@@ -85,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.buttonContinue).setOnClickListener(new View.OnClickListener() {
+            // Executes new activity to MoviebaseActivity
             @Override
             public void onClick(View view) {
                 switch (view.getId()) {
@@ -94,43 +65,41 @@ public class ProfileActivity extends AppCompatActivity {
                         break;
                 }
             }
-            });
-                findViewById(R.id.buttonFavorites).setOnClickListener(new View.OnClickListener() {
+        });
+        findViewById(R.id.buttonFavorites).setOnClickListener(new View.OnClickListener() {
+            // Executes new activity to FavoriteActivity
+            @Override
+            public void onClick(View view) {
 
-                    @Override
-                    public void onClick(View view) {
-
-                        switch (view.getId()) {
-                            case R.id.buttonFavorites:
-                                finish();
-                                startActivity(new Intent(ProfileActivity.this, FavoriteActivity.class));
-                                break;
-                        }
-                    }
+                switch (view.getId()) {
+                    case R.id.buttonFavorites:
+                        finish();
+                        startActivity(new Intent(ProfileActivity.this, FavoriteActivity.class));
+                        break;
                 }
+            }
+        });
 
-            );
         findViewById(R.id.buttonUsers).setOnClickListener(new View.OnClickListener() {
+              // Executes new activity to AllUsersActivity
+              @Override
+              public void onClick(View view) {
 
-                                                                  @Override
-                                                                  public void onClick(View view) {
+                  switch (view.getId()) {
+                      case R.id.buttonUsers:
+                          finish();
+                          startActivity(new Intent(ProfileActivity.this, AllUsersActivity.class));
+                          break;
+                  }
+              }
+          }
 
-                                                                      switch (view.getId()) {
-                                                                          case R.id.buttonUsers:
-                                                                              finish();
-                                                                              startActivity(new Intent(ProfileActivity.this, AllUsersActivity.class));
-                                                                              break;
-                                                                      }
-                                                                  }
-                                                              }
-
-        );
-        }
-
+        );}
 
 
 
 
+    // The method that makes it able to log out as an user
     private void Logout() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
@@ -141,21 +110,19 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     @Override
+    // This makes it able to check if the user is already logged in when opening app after killing it
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
 
+        // If the user is not logged in, go to login page
         if (user == null){
             finish();
             startActivity(new Intent(this, MainActivity.class));
         }
-        // If user already has a display name, hide 'save username' button
-//        if (user.getDisplayName() !=null){
-//            Button itemSave = findViewById(R.id.buttonSaveUsername);
-//            itemSave.setVisibility(View.GONE);
-//        }
     }
 
+    // This is the method to load the updated user information from Firebase
     private void loadUserInformation() {
         FirebaseUser user = mAuth.getCurrentUser();
 
@@ -167,25 +134,27 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    // This method makes it able to save the filled in username to the Firebase database
     private void saveUserInformation() {
         String displayName = editText.getText().toString();
 
+        // If input is empty; make noticeable
         if(displayName.isEmpty()){
             editText.setError("Name required");
             editText.requestFocus();
             return;
         }
 
+        // Check for currentuser authentication
         FirebaseUser user = mAuth.getCurrentUser();
 
+        // Creates a request to change the user profile if input for username is not null
         if(user !=null){
             progressBar.setVisibility(View.VISIBLE);
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(displayName)
-                  // TODO: FIX THIS BECAUSE IT MAKES 'SAVE USER INFO' CRASH!!!
-                 //   .setPhotoUri(Uri.parse(profileImageURL))
                     .build();
-
+            // Makes the actual update of the username happen
             user.updateProfile(profile)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -199,76 +168,4 @@ public class ProfileActivity extends AppCompatActivity {
                     });
         }
     }
-
-
-//
-//    // Not working properly yet
-//    private void uploadImageToFirebaseStorage() {
-//        final StorageReference profileImageReference = FirebaseStorage.getInstance().getReference("profilepictures/"+System.currentTimeMillis()+".jpg");
-//
-//        if(uriProfileImage != null){
-//            progressBar.setVisibility(View.VISIBLE);
-//            profileImageReference.putFile(uriProfileImage)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
-//
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            progressBar.setVisibility(View.GONE);
-//                            profileImageURL = taskSnapshot.getDownloadUrl().toString();
-//
-//                        }
-//                    })
-//            .addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    progressBar.setVisibility(View.GONE);
-//                        Toast.makeText(ProfileActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
-//
-//                }
-//            });
-//        }
-//        }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-////        if(requestCode == CHOOSE_IMAGE && requestCode == RESULT_OK && data != null && data.getData() != null){
-////            uriProfileImage = data.getData();
-////            try {
-////                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
-////                imageView.setImageBitmap(bitmap);
-////
-////                uploadImageToFirebaseStorage();
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-////        }
-//
-//        // Fixed thanks to: https://stackoverflow.com/questions/28155972/imageview-not-showing-image-selected-from-gallery
-//
-//        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && null != data && data.getData() !=null) {
-//            Uri uriProfileImage = data.getData();
-//            try {
-//                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriProfileImage));
-//                uploadImageToFirebaseStorage();
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
-
-//    // Not working properly yet
-//        private void showImageChooser(){
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent. setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(Intent.createChooser(intent, "select profile image"), CHOOSE_IMAGE);
-//    }
-
-
-
-
 }

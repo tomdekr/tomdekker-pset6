@@ -1,7 +1,6 @@
 package com.example.tom_d.moviebase;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -9,90 +8,73 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class UsersFavoriteActivity extends AppCompatActivity {
 
 
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
-    ArrayAdapter<String> list;
-    ArrayList<String> movieList, allTitels, lijst;
-    ListView listView;
-    FavoriteMovie favoriteMovie;
+    ArrayList<String>  allTitels;
     FirebaseDatabase mDatabase;
     DatabaseReference myRef;
 
-    List<FavoriteMovie> titleList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_favorite);
 
+        // Intent to get the user selected by the current user from AllUsersActivity
         Intent intent = getIntent();
+        // Makes variable for the username for the getreference url
         String currentUserAfterSelection = intent.getStringExtra("user");
 
-
+        // Necessary stuff for functionality
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        movieList = new ArrayList<>();
         allTitels = new ArrayList<>();
-        titleList = new ArrayList<>();
-        final String currentUserDisplay = currentUser.getDisplayName();
         mDatabase = FirebaseDatabase.getInstance();
         myRef = mDatabase.getReferenceFromUrl("https://moviebase-38f88.firebaseio.com/FavoriteMovie/"+currentUserAfterSelection);
 
 
-
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
+            // Listens if there is made a change to the 'favorites' of the current user
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot movieSnapshot :  dataSnapshot.getChildren()){
-//                    for (DataSnapshot titleSnapshot : movieSnapshot.getChildren()){
-//                        FavoriteMovie movie = titleSnapshot.getValue(FavoriteMovie.class);
-//                        titleList.add(movie);
+                // Creates a snapshot from the database to iterate through
                 for (DataSnapshot children : dataSnapshot.getChildren()) {
-                    Log.v("Eerste key", "   " + dataSnapshot.toString()); // hele database vanaf favorit
+                    Log.v("Eerste key", "   " + dataSnapshot.toString()); // Log to check spot in branch
+
+                    // Gets the right value and makes it able to split through because of the String
                     String values = null;
-
-
-
                     values = children.getValue().toString();
 
-                    Log.v("Tweede key", "   " + children.toString()); // database vanaf tomdekr  // ?? waarom 3x ??
-                    Log.v("Derde key", "   " + values); // database vanaf tomdekr  // ?? waarom 3x ??
-
-//                        movieList.add(children.toString());  // werkt DEELS!
-
-
-
+                    // Split's the list by ' , ' to make all movie titles with unique stand alone
                     String[] lijst = values.split(",");
-                    Log.v("Vierde key", "   " + Arrays.toString(lijst)); // database vanaf tomdekr  // ?? waarom 3x ??
+                    Log.v("Vierde key", "   " + Arrays.toString(lijst)); // Log to check spot in branch
 
+                    // Split's the remaining list for every unique one on ' = ' and adds all values from them to the new arraylist
                     for (int i = 0 ; i < lijst.length; i++ ){
-
                         String[] lijst2 = values.split("=");
                         allTitels.add(lijst2[i]);
 
 
 
                     }
-                    Log.v("keyResult","   " + allTitels);
+                    Log.v("keyResult","   " + allTitels); // Log to check result
+
+                    // Makes the arraylist from api visible in a row_layout
                     ArrayAdapter<String> adapter =
                             new ArrayAdapter<String>(
                                     getApplicationContext(),
@@ -100,9 +82,10 @@ public class UsersFavoriteActivity extends AppCompatActivity {
                                     allTitels
                             );
                     ListView mListView = findViewById(R.id.listViewMovies2);
+
+                    //Sets the adapter to make the final visualisation for the listview
                     mListView.setAdapter(adapter);
 
-//                    mListView.setAdapter(adapter);
                 }
             }
 
@@ -114,7 +97,7 @@ public class UsersFavoriteActivity extends AppCompatActivity {
         });
     }
 
-
+    // Make sure that when back button is pressed the right activity is displayed
     @Override
     public void onBackPressed() {
         super.onBackPressed();

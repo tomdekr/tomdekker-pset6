@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //Check if password is more than 5 char
         if (password.length()<6){
-            editTextEmail.setError("Need more characters than 6");
+            editTextEmail.setError("Need more characters than 5");
             editTextEmail.requestFocus();
             return;
         }

@@ -1,16 +1,12 @@
 package com.example.tom_d.moviebase;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Movie;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,26 +15,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
-import static android.os.Build.ID;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -47,8 +35,6 @@ public class InfoActivity extends AppCompatActivity {
     DatabaseReference databaseTitle;
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
-    private FirebaseDatabase database;
-    FavoriteMovie title;
 
     ListView listViewMovies;
 
@@ -56,36 +42,25 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
+        // Necessary stuff for functionality
         mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-
-
         currentUser = mAuth.getCurrentUser();
         databaseTitle = FirebaseDatabase.getInstance().getReference("FavoriteMovie");
-
         listViewMovies = findViewById(R.id.listViewMovies2);
 
+        // Retrieves the saved movie title from 'movie title' from MoviebaseActivity
         final ListView mListView = (ListView) findViewById(R.id.list);
         SharedPreferences settings = this.getSharedPreferences("movie title", MODE_PRIVATE);
         String item = settings.getString("movie title", "");
         final String input = settings.getString("movie title", "");
         final TextView text = (TextView) findViewById(R.id.text);
 
-
-        final ArrayList<String> listdata = new ArrayList<String>();
-        System.out.println("Check Value: " + input);
-
         findViewById(R.id.imageView4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Adds the movie to favorites if image 'heart' is clicked
                 addFavorite();
-
-//                switch (view.getId()) {
-//                    case R.id.imageView4:
-//
-////                        startActivity(new Intent(InfoActivity.this, FavoriteActivity.class));
-//                        break;
-//                }
             }
         });
 
@@ -94,7 +69,9 @@ public class InfoActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         String url = ("http://www.omdbapi.com/?apikey=338560c0&t="+input);
-        url = url.replace(" ", "%20");
+
+        // Replaces any space in url (input) for underscore to prevent error
+        url = url.replace(" ", "_");
 
 
 
@@ -133,6 +110,7 @@ public class InfoActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        // Makes the arraylist from api visible in a row_layout
                         ArrayAdapter<String> adapter =
                                 new ArrayAdapter<String>(
                                         getApplicationContext(),
@@ -140,43 +118,18 @@ public class InfoActivity extends AppCompatActivity {
                                         list
                                 );
                         ListView mListView = findViewById(R.id.list);
+                        // Sets the adapter to make the final visualisation for the listview
                         mListView.setAdapter(adapter);
 
-
+                        // Makes the listview item's clickable
                         try {
                             mListView.setOnItemClickListener(
-
                                     new AdapterView.OnItemClickListener() {
-
-                                        SharedPreferences settings = InfoActivity.this.getSharedPreferences("movie list", MODE_PRIVATE);
-                                        String item = settings.getString("movie list", "[]");
-
-                                        JSONArray movie_title = new JSONArray(item);
-
-
                                         @Override
+                                        // Shows how to add the movie to favorites
                                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                                             String moviePicked = "Click on the heart to set the movie to your favorites";
                                             Toast.makeText(InfoActivity.this, moviePicked, Toast.LENGTH_LONG).show();
-
-//                                            saveData();
-
-//                                            addFavorite();
-
-
-
-//
-//                                            Intent i = new Intent(InfoActivity.this, FavoriteActivity.class);
-//                                            i.putExtra("movie", list.get(0));
-//
-//                                            startActivity(i);
-//
-//                                            SharedPreferences settings = InfoActivity.this.getSharedPreferences("movie title", MODE_PRIVATE);
-//                                            SharedPreferences.Editor editor = settings.edit();
-//
-//                                            movie_title.put(String.valueOf(adapterView.getItemAtPosition(position)));
-//                                            editor.putString("movie title", String.valueOf(list));
-//                                            editor.commit();
                                         }
 
                                     });
@@ -188,54 +141,26 @@ public class InfoActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
             }
         });
-// Add the request to the RequestQueue.
+        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
-
+    // Method that is attached to the 'heart' button to add the movie from InfoActivity to favorites
     private void addFavorite(){
+        // Gets the title from the list
         String title = list.get(0);
-//        String id = list.get(7) ;
-//        movie = new FavoriteMovie(title);
-//        FavoriteMovie favoriteMovie = new FavoriteMovie(title,id);
-//        database.getReference().child("FavoriteMovie").child(currentUser.getUid()).child(favoriteMovie.getId()).setValue(title);
 
+        // Creates a unique key for a movie title
         String id = databaseTitle.push().getKey();
-        FavoriteMovie favoritemovie = new FavoriteMovie(id,title);
 
+        // Saves the title with username and unique key to Firebase Database
         databaseTitle.child(currentUser.getDisplayName()).child(id).setValue(title);
 
-//        database.getReference().child("FavoriteMovie").child(currentUser.getDisplayName()).child(id).setValue(title);
-           Toast.makeText(this,"Favorite added", Toast.LENGTH_LONG).show();
-
-//        database.getReference().child("FavoriteMovie").child(currentUser.getDisplayName()).push().child(currentUser.getDisplayName()+"Movie").setValue(title);
-
-
+        // Shows toast
+        Toast.makeText(this,"Favorite added", Toast.LENGTH_LONG).show();
     }
 
-//    private void saveData(){
-//        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(list);
-//        editor.putString("movie list", json);
-//        editor.apply();
-//        editor.commit();
-//    }
-//
-//    private void loadData() {
-//
-//        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-//        Gson gson = new Gson();
-//        String json = sharedPreferences.getString("movie list", null);
-//        Type type = new TypeToken<List>() {}.getType();
-//        List infoList = (List) gson.fromJson(json, InfoActivity.class);
-//
-//        if (infoList == null){
-//            infoList = new ArrayList<>();
-//        }
-//    }
-
+    // Make sure that when back button is pressed the right activity is displayed
     @Override
     public void onBackPressed() {
         super.onBackPressed();
