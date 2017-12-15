@@ -24,9 +24,9 @@
         <activity android:name=".MovieAdapter" />
         <activity android:name=".MovieDatabase" />
         <activity android:name=".FavoriteActivity" />
-        <activity android:name=".BlankFragment" />
-        <activity android:name=".InfoFragment" />
-        <activity android:name=".InfoActivity"></activity>
+        <activity android:name=".InfoActivity" />
+        <activity android:name=".AllUsersActivity" />
+        <activity android:name=".UsersFavoriteActivity"></activity>
     </application>
 
 </manifest>

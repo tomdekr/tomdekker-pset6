@@ -52,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         editText = findViewById(R.id.editTextUsername);
-        imageView = findViewById(R.id.imageView);
+//        imageView = findViewById(R.id.imageView);
 
         progressBar = findViewById(R.id.progressbar);
 
@@ -61,12 +61,12 @@ public class ProfileActivity extends AppCompatActivity {
         //This wil load all filled in (working atm) information
         loadUserInformation();
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showImageChooser();
-            }
-        });
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showImageChooser();
+//            }
+//        });
 
         findViewById(R.id.buttonSaveUsername).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +110,21 @@ public class ProfileActivity extends AppCompatActivity {
                 }
 
             );
+        findViewById(R.id.buttonUsers).setOnClickListener(new View.OnClickListener() {
+
+                                                                  @Override
+                                                                  public void onClick(View view) {
+
+                                                                      switch (view.getId()) {
+                                                                          case R.id.buttonUsers:
+                                                                              finish();
+                                                                              startActivity(new Intent(ProfileActivity.this, AllUsersActivity.class));
+                                                                              break;
+                                                                      }
+                                                                  }
+                                                              }
+
+        );
         }
 
 
@@ -186,72 +201,72 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
-    // Not working properly yet
-    private void uploadImageToFirebaseStorage() {
-        final StorageReference profileImageReference = FirebaseStorage.getInstance().getReference("profilepictures/"+System.currentTimeMillis()+".jpg");
-
-        if(uriProfileImage != null){
-            progressBar.setVisibility(View.VISIBLE);
-            profileImageReference.putFile(uriProfileImage)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
-
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressBar.setVisibility(View.GONE);
-                            profileImageURL = taskSnapshot.getDownloadUrl().toString();
-
-                        }
-                    })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressBar.setVisibility(View.GONE);
-                        Toast.makeText(ProfileActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
-
-                }
-            });
-        }
-        }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-//        if(requestCode == CHOOSE_IMAGE && requestCode == RESULT_OK && data != null && data.getData() != null){
-//            uriProfileImage = data.getData();
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
-//                imageView.setImageBitmap(bitmap);
 //
+//    // Not working properly yet
+//    private void uploadImageToFirebaseStorage() {
+//        final StorageReference profileImageReference = FirebaseStorage.getInstance().getReference("profilepictures/"+System.currentTimeMillis()+".jpg");
+//
+//        if(uriProfileImage != null){
+//            progressBar.setVisibility(View.VISIBLE);
+//            profileImageReference.putFile(uriProfileImage)
+//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+//
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            progressBar.setVisibility(View.GONE);
+//                            profileImageURL = taskSnapshot.getDownloadUrl().toString();
+//
+//                        }
+//                    })
+//            .addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    progressBar.setVisibility(View.GONE);
+//                        Toast.makeText(ProfileActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
+//
+//                }
+//            });
+//        }
+//        }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+////        if(requestCode == CHOOSE_IMAGE && requestCode == RESULT_OK && data != null && data.getData() != null){
+////            uriProfileImage = data.getData();
+////            try {
+////                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
+////                imageView.setImageBitmap(bitmap);
+////
+////                uploadImageToFirebaseStorage();
+////            } catch (IOException e) {
+////                e.printStackTrace();
+////            }
+////        }
+//
+//        // Fixed thanks to: https://stackoverflow.com/questions/28155972/imageview-not-showing-image-selected-from-gallery
+//
+//        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && null != data && data.getData() !=null) {
+//            Uri uriProfileImage = data.getData();
+//            try {
+//                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriProfileImage));
 //                uploadImageToFirebaseStorage();
+//
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
 //        }
+//
+//    }
 
-        // Fixed thanks to: https://stackoverflow.com/questions/28155972/imageview-not-showing-image-selected-from-gallery
-
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && null != data && data.getData() !=null) {
-            Uri uriProfileImage = data.getData();
-            try {
-                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriProfileImage));
-                uploadImageToFirebaseStorage();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    // Not working properly yet
-        private void showImageChooser(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent. setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "select profile image"), CHOOSE_IMAGE);
-    }
+//    // Not working properly yet
+//        private void showImageChooser(){
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent. setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(Intent.createChooser(intent, "select profile image"), CHOOSE_IMAGE);
+//    }
 
 
 

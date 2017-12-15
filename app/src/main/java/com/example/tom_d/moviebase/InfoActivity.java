@@ -3,6 +3,7 @@ package com.example.tom_d.moviebase;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Movie;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -37,6 +38,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.os.Build.ID;
+
 public class InfoActivity extends AppCompatActivity {
 
     public ArrayList<String> list = new ArrayList<String>();
@@ -44,6 +47,8 @@ public class InfoActivity extends AppCompatActivity {
     DatabaseReference databaseTitle;
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
+    private FirebaseDatabase database;
+    FavoriteMovie title;
 
     ListView listViewMovies;
 
@@ -52,9 +57,11 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
 
         currentUser = mAuth.getCurrentUser();
-        databaseTitle = FirebaseDatabase.getInstance().getReference();
+        databaseTitle = FirebaseDatabase.getInstance().getReference("FavoriteMovie");
 
         listViewMovies = findViewById(R.id.listViewMovies2);
 
@@ -106,6 +113,8 @@ public class InfoActivity extends AppCompatActivity {
                             String Poster = newObject.getString("Poster");
                             String Released = newObject.getString("Released");
                             String Type = newObject.getString("Type");
+                            String ID = newObject.getString("imdbID");
+
 
                             list.add(Title);
                             list.add("Plot: "+Plot);
@@ -114,6 +123,8 @@ public class InfoActivity extends AppCompatActivity {
                             list.add("Poster: "+Poster);
                             list.add("Year of release: "+Released);
                             list.add("Type: "+Type);
+                            list.add("imdbID: "+ID);
+
 
 
 
@@ -130,6 +141,7 @@ public class InfoActivity extends AppCompatActivity {
                                 );
                         ListView mListView = findViewById(R.id.list);
                         mListView.setAdapter(adapter);
+
 
                         try {
                             mListView.setOnItemClickListener(
@@ -183,13 +195,20 @@ public class InfoActivity extends AppCompatActivity {
 
     private void addFavorite(){
         String title = list.get(0);
-
+//        String id = list.get(7) ;
+//        movie = new FavoriteMovie(title);
+//        FavoriteMovie favoriteMovie = new FavoriteMovie(title,id);
+//        database.getReference().child("FavoriteMovie").child(currentUser.getUid()).child(favoriteMovie.getId()).setValue(title);
 
         String id = databaseTitle.push().getKey();
-        FavoriteMovie favoritemovie = new FavoriteMovie(title);
+        FavoriteMovie favoritemovie = new FavoriteMovie(id,title);
 
-        databaseTitle.child("FavoriteMovie").child(currentUser.getDisplayName()).push().setValue(favoritemovie);
-           Toast.makeText(this,title, Toast.LENGTH_LONG).show();
+        databaseTitle.child(currentUser.getDisplayName()).child(id).setValue(title);
+
+//        database.getReference().child("FavoriteMovie").child(currentUser.getDisplayName()).child(id).setValue(title);
+           Toast.makeText(this,"Favorite added", Toast.LENGTH_LONG).show();
+
+//        database.getReference().child("FavoriteMovie").child(currentUser.getDisplayName()).push().child(currentUser.getDisplayName()+"Movie").setValue(title);
 
 
     }

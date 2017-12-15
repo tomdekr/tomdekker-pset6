@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FavoriteActivity extends AppCompatActivity {
+public class UsersFavoriteActivity extends AppCompatActivity {
 
 
     FirebaseAuth mAuth;
@@ -42,7 +42,12 @@ public class FavoriteActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite);
+        setContentView(R.layout.activity_users_favorite);
+
+        Intent intent = getIntent();
+        String currentUserAfterSelection = intent.getStringExtra("user");
+
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         movieList = new ArrayList<>();
@@ -50,7 +55,7 @@ public class FavoriteActivity extends AppCompatActivity {
         titleList = new ArrayList<>();
         final String currentUserDisplay = currentUser.getDisplayName();
         mDatabase = FirebaseDatabase.getInstance();
-        myRef = mDatabase.getReferenceFromUrl("https://moviebase-38f88.firebaseio.com/FavoriteMovie/"+currentUserDisplay);
+        myRef = mDatabase.getReferenceFromUrl("https://moviebase-38f88.firebaseio.com/FavoriteMovie/"+currentUserAfterSelection);
 
 
 
@@ -62,21 +67,31 @@ public class FavoriteActivity extends AppCompatActivity {
 //                        FavoriteMovie movie = titleSnapshot.getValue(FavoriteMovie.class);
 //                        titleList.add(movie);
                 for (DataSnapshot children : dataSnapshot.getChildren()) {
-                        Log.v("Eerste key", "   " + dataSnapshot.toString()); // hele database vanaf favorit
-                        String values = null;
-                        values = children.getValue().toString();
-
-                        String[] lijst = values.split(",");
-                        Log.v("Tweede key", "   " + Arrays.toString(lijst)); // database vanaf tomdekr  // ?? waarom 3x ??
-
-                        for (int i = 0 ; i < lijst.length; i++ ){
-
-                            String[] lijst2 = values.split("=");
-                            allTitels.add(lijst2[i]);
+                    Log.v("Eerste key", "   " + dataSnapshot.toString()); // hele database vanaf favorit
+                    String values = null;
 
 
 
-                        }
+                    values = children.getValue().toString();
+
+                    Log.v("Tweede key", "   " + children.toString()); // database vanaf tomdekr  // ?? waarom 3x ??
+                    Log.v("Derde key", "   " + values); // database vanaf tomdekr  // ?? waarom 3x ??
+
+//                        movieList.add(children.toString());  // werkt DEELS!
+
+
+
+                    String[] lijst = values.split(",");
+                    Log.v("Vierde key", "   " + Arrays.toString(lijst)); // database vanaf tomdekr  // ?? waarom 3x ??
+
+                    for (int i = 0 ; i < lijst.length; i++ ){
+
+                        String[] lijst2 = values.split("=");
+                        allTitels.add(lijst2[i]);
+
+
+
+                    }
                     Log.v("keyResult","   " + allTitels);
                     ArrayAdapter<String> adapter =
                             new ArrayAdapter<String>(
@@ -105,9 +120,12 @@ public class FavoriteActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(this, InfoActivity.class);
         intent.putExtra("InfoActivity", InfoActivity.class);
-        startActivity(new Intent(FavoriteActivity.this, ProfileActivity.class));
+        startActivity(new Intent(UsersFavoriteActivity.this, AllUsersActivity.class));
     }
 }
+
+
+
 
 
 

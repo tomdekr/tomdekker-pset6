@@ -23,7 +23,7 @@ public class FavoriteList extends ArrayAdapter<FavoriteMovie> {
     private List<FavoriteMovie> movieList;
 
     public FavoriteList(Activity context, List<FavoriteMovie> movieList) {
-        super(context, R.layout.list_layout, movieList);
+        super(context, R.layout.row_layout, movieList);
         this.context = context;
         this.movieList = movieList;
 

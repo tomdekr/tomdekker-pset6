@@ -19,7 +19,7 @@
         android:backgroundTint="#cccccc"
         android:ems="10"
         android:inputType="text"
-        android:text="Your favorite movies:"
+        android:text="His/Hers favorite movies:"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="25dp"
