@@ -19,7 +19,7 @@
         android:backgroundTint="#cccccc"
         android:ems="10"
         android:inputType="text"
-        android:text="All users:"
+        android:text="Other users:"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="25dp"
@@ -40,7 +40,7 @@
         android:inputType="text"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="25dp"
+        android:textSize="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />

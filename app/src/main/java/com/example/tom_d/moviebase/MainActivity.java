@@ -26,8 +26,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Authentication from Firebase
         mAuth = FirebaseAuth.getInstance();
 
+        //Necessary stuff for function
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         progressBar = findViewById(R.id.progressbar);
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.textViewSignup).setOnClickListener(this);
         findViewById(R.id.buttonLogin).setOnClickListener(this);
     }
-
+    // This function creates the functionality to let a user login
     private void userLogin(){
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -53,19 +55,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editTextEmail.requestFocus();
             return;
         }
+        //Check if password is empty
         if (password.isEmpty()) {
             editTextPassword.setError("Password is required!");
             editTextPassword.requestFocus();
             return;
         }
+        //Check if password is more than 5 char
         if (password.length()<6){
             editTextEmail.setError("Need more characters than 6");
             editTextEmail.requestFocus();
             return;
         }
-
+        //Shows progress
         progressBar.setVisibility(View.VISIBLE);
 
+        //Makes the user able to login with the authentication by Firebase
         mAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-
+        //If user is logged in, let him go to his/hers profile on start
         if (mAuth.getCurrentUser() != null){
             startActivity(new Intent(this, ProfileActivity.class));
         }
@@ -98,10 +103,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.textViewSignup:
+                //Go to Signup Activity
                 finish();
                 startActivity(new Intent(this, SignupActivity.class));
                 break;
             case R.id.buttonLogin:
+                //If button clicked, use UserLogin() to let the user login
                 userLogin();
                 break;
         }

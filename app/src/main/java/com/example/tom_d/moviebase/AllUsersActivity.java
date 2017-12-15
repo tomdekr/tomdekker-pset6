@@ -86,10 +86,13 @@ public class AllUsersActivity extends AppCompatActivity {
                         new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                                String moviePicked = ("You selected the user: " + currentUserDisplay);
+                                String moviePicked = ("You selected the user");
                                 Toast.makeText(AllUsersActivity.this, moviePicked, Toast.LENGTH_LONG).show();
+
                                 Intent i = new Intent(AllUsersActivity.this, UsersFavoriteActivity.class);
-                                i.putExtra("user",allTitels.get(0));
+
+
+                                    i.putExtra("user", allTitels.get(position));
 
                                 startActivity(i);
                             }
@@ -102,69 +105,6 @@ public class AllUsersActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-
-//                for (DataSnapshot children : dataSnapshot.getChildren()) {
-//                    Log.v("Eerste key", "   " + dataSnapshot.toString()); // hele database vanaf favorit
-//                    String values = null;
-//
-//
-//
-//                    values = children.getValue().toString();
-//
-//
-//
-//
-//
-//
-//                    Log.v("Tweede key", "   " + children.toString()); // database vanaf tomdekr  // ?? waarom 3x ??
-//                    Log.v("Derde key", "   " + values); // database vanaf tomdekr  // ?? waarom 3x ??
-//
-//
-//
-//
-////                        movieList.add(children.toString());  // werkt DEELS!
-//
-//
-//
-//                    String[] lijst = values.split(",");
-//                    Log.v("Vierde key", "   " + Arrays.toString(lijst)); // database vanaf tomdekr  // ?? waarom 3x ??
-//
-//                    for (int i = 0 ; i < lijst.length; i++ ){
-//
-//                        String[] lijst2 = values.split("=");
-//                        allTitels.add(lijst2[i]);
-//
-//
-//
-//                    }
-//                    Log.v("keyResult","   " + allTitels);
-//                    ArrayAdapter<String> adapter =
-//                            new ArrayAdapter<String>(
-//                                    getApplicationContext(),
-//                                    R.layout.row_layout,
-//                                    allTitels
-//                            );
-//                    ListView mListView = findViewById(R.id.listViewMovies2);
-//                    mListView.setAdapter(adapter);
-//
-////                    mListView.setAdapter(adapter);
-//                }
-//            }
-//
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
-
 
     @Override
     public void onBackPressed() {
