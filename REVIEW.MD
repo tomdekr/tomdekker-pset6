@@ -1,4 +1,4 @@
-#Laura Geerars (11007699)
+Laura Geerars (11007699)
 - Verwijder onnodige comments
 - Verwijder uitgecommende functies
 - Verwijder activities die je niet meer gebruikt
